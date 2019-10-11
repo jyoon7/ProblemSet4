@@ -51,6 +51,7 @@ int write(void){
   int i = 0;
   while((c = compressed[i++]) != '\0'){
     fputc(c, writeFile);
+    printf("%i", compressed[i]);
   }
 
   if(writeFile) fclose(writeFile);
@@ -58,7 +59,8 @@ int write(void){
 }
 
 void encode(void){
-  int length = 1;
+  static int z = 0;
+  char length = 1;
   for(int x = 0; pixels[x] != '\0'; x++){
     if (pixels[x+1] == '\n'){  
       if (pixels[x] == pixels[x+2]){
@@ -66,7 +68,8 @@ void encode(void){
         x = x + 2;
       }
       else if (pixels[x] != pixels[x+2]){
-        printf("%i", length);
+        compressed[z] = length;
+        z = z + 1;
         length = 1;
         x = x + 2;
       }
@@ -76,9 +79,10 @@ void encode(void){
         length++;
       }
       else if (pixels[x] != pixels[x+1]){
-        printf("%i", length);
+        compressed[z] = length;
+        z = z + 1;
         length = 1;
-      } 
-    }   
+      }
+    }
   }
 }
