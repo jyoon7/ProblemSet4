@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 char pixels[200];
 char compressed[200];
@@ -50,10 +49,7 @@ int write(void){
 
   char c;
   int i = 0;
-  printf("hello ");
-  while((c = pixels[i]) != '\0'){
-    i = i + 1;
-    printf("world\n");
+  while((c = pixels[i++]) != '\0'){
     fputc(c, writeFile);
   }
 
@@ -63,21 +59,19 @@ int write(void){
 
 void decode(void){
   int x = 0; // Goes through compressed array
+  int z = 0; // goes through pixels arraw
   int digit = 1; // Counts number of pixels per row
-  int length;
-  char color = '1';
+  int length; // Counts number of times pixel is repeated in the array
+  char color = '1'; 
     
     length = compressed[x] - '0';
     
-    for(int y = 0; y < 110; y++){
-      printf("Length: %i ", length);
+    for(int y = 0; y < 109; y++){
       if((digit % 10) == 0){ // count for line break
-        printf("BREAK\n");
-        pixels[digit] = '\n';
+        pixels[z++] = '\n';
         digit++;
       }
       else if (length <= 0){ // Change pixel color
-        printf("CHANGE\n");
         if (color == '1'){   
           color = '0';
         }
@@ -87,10 +81,9 @@ void decode(void){
         x++;
         length = compressed[x] - '0';
       }
-      else if (length != 0)
+      else if (length != 0) // Copy each pixel into the pixel array
       {
-        pixels[digit] = color; 
-        printf("Color : %c\n", pixels[digit]);
+        pixels[z++] = color;
         digit++;
         length = length - 1;
       }
