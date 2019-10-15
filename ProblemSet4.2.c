@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 char pixels[200];
 char compressed[200];
@@ -49,7 +50,10 @@ int write(void){
 
   char c;
   int i = 0;
-  while((c = pixels[i++]) != '\0'){
+  printf("hello ");
+  while((c = pixels[i]) != '\0'){
+    i = i + 1;
+    printf("world\n");
     fputc(c, writeFile);
   }
 
@@ -58,5 +62,41 @@ int write(void){
 }
 
 void decode(void){
- 
+  int x = 0; // Goes through compressed array
+  int digit = 1; // Counts number of pixels per row
+  int length;
+  char color = '1';
+    
+    length = compressed[x] - '0';
+    
+    for(int y = 0; y < 110; y++){
+      printf("Length: %i ", length);
+      if((digit % 10) == 0){ // count for line break
+        printf("BREAK\n");
+        pixels[digit] = '\n';
+        digit++;
+      }
+      else if (length <= 0){ // Change pixel color
+        printf("CHANGE\n");
+        if (color == '1'){   
+          color = '0';
+        }
+        else if (color == '0'){
+          color = '1';
+        }
+        x++;
+        length = compressed[x] - '0';
+      }
+      else if (length != 0)
+      {
+        pixels[digit] = color; 
+        printf("Color : %c\n", pixels[digit]);
+        digit++;
+        length = length - 1;
+      }
+    }
 }
+      
+      
+      
+    
